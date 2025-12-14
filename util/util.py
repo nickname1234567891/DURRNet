@@ -312,7 +312,7 @@ def batch_SSIM(img, imclean):
 
     for i in range(Img.shape[0]):
         SSIM += structural_similarity(Iclean[i, :, :, :], Img[i, :, :, :], win_size=11,
-                                      multichannel=True, data_range=1)
+                                      channel_axis=-1, data_range=1)
     return SSIM / Img.shape[0]
 
 
