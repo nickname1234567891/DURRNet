@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pywt
 import torch.nn.functional as F
-from invNet import *
+from .invNet import *
 
 def softshrink(x, lambd):
     sgn = torch.sign(x)
