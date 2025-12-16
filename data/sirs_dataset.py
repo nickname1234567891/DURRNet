@@ -226,6 +226,25 @@ class CEILDataset(BaseDataset):
         t_img = Image.open(B_path).convert('RGB')
         r_img = Image.open(R_path).convert('RGB')
 
+        # === [新增] 強制放大過小的圖片 (防止訓練卡死) ===
+        # 設定安全尺寸 (比 fineSize 256 稍大)
+        safe_size = 286 
+        
+        # 檢查背景圖 (Transmission)
+        w, h = t_img.size
+        if w < safe_size or h < safe_size:
+            ratio = max(safe_size / w, safe_size / h)
+            new_size = (int(w * ratio) + 1, int(h * ratio) + 1)
+            t_img = t_img.resize(new_size, Image.BICUBIC)
+
+        # 檢查反射圖 (Reflection)
+        w_r, h_r = r_img.size
+        if w_r < safe_size or h_r < safe_size:
+            ratio = max(safe_size / w_r, safe_size / h_r)
+            new_size = (int(w_r * ratio) + 1, int(h_r * ratio) + 1)
+            r_img = r_img.resize(new_size, Image.BICUBIC)
+        # ================================================
+        
         if self.finetune:
             B = to_tensor(t_img)
             R = to_tensor(Image.fromarray(np.zeros_like(t_img)))
